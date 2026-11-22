@@ -4,19 +4,19 @@
    VERSION 与 index.html 的 ?v 同步递升（教训：勿加 ignoreSearch 把页面钉死旧版；
    SW 预存键必须与页面请求键（含 ?v=）逐字对齐——差一个 query 即严格键不中） */
 
-const VERSION = "v1";
+const VERSION = "v2";
 const SHELL = `mhj-${VERSION}-shell`;
 const TEXTS = `mhj-${VERSION}-texts`;
 
 const SHELL_FILES = [
   "./", "./index.html", "./manifest.json",
-  "./css/main.css?v=1",
-  "./vendor/leaflet.js", "./vendor/leaflet.css?v=1",
-  "./data/site_data.js?v=1", "./data/stats.js?v=1",
+  "./css/main.css?v=2",
+  "./vendor/leaflet.js", "./vendor/leaflet.css?v=2",
+  "./data/site_data.js?v=2", "./data/stats.js?v=2",
   "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png",
-  "./js/config.js?v=1", "./js/map.js?v=1", "./js/rail.js?v=1",
-  "./js/reader.js?v=1", "./js/search.js?v=1", "./js/suishi.js?v=1",
-  "./js/stats.js?v=1", "./js/bookmarks.js?v=1", "./js/export.js?v=1", "./js/app.js?v=1",
+  "./js/config.js?v=2", "./js/map.js?v=2", "./js/rail.js?v=2",
+  "./js/reader.js?v=2", "./js/search.js?v=2", "./js/suishi.js?v=2",
+  "./js/stats.js?v=2", "./js/bookmarks.js?v=2", "./js/export.js?v=2", "./js/app.js?v=2",
 ];
 
 self.addEventListener("install", e => {

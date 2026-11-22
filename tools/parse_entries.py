@@ -17,28 +17,27 @@ VOL_KINDS = {0: "preface", 1: "city", 2: "street", 3: "street", 4: "street",
 SPECIAL = {("自序", 0): "preface", ("提要", 0): "tiyao"}
 
 
-def split_paras(text: str, per: int = 3):
-    """按句群切段：每 per 个。一段；尾段并入前段若过短。"""
-    sents, out = [], []
-    for ch in text:
-        sents.append(ch)
-        if ch in "。；":
-            out.append("".join(sents))
-            sents = []
-    if sents:
-        tail = "".join(sents)
-        if out and len(tail) < 12:
-            out[-1] += tail
+def split_paras(text: str, target: int = 110, slack: int = 28):
+    """四库本无句读——按字长机械分段（屏读可读性），边界在 ±slack 内吸附常见
+    发语/转语字（每/凡/又/自/至/其/若/常/有/於/是/中），不增删一字，纯切分。"""
+    out = []
+    rest = text
+    while len(rest) > target + slack:
+        cut = None
+        for k in range(target - slack, target + slack):
+            if k < len(rest) and rest[k] in "每凡又自此至其若常有於是中":
+                cut = k + 1
+                break
+        if cut is None or cut <= 10:
+            cut = target
+        out.append(rest[:cut])
+        rest = rest[cut:]
+    if rest:
+        if out and len(rest) < 30:
+            out[-1] += rest
         else:
-            out.append(tail)
-    # 每 per 句合一段
-    merged = []
-    for i, s in enumerate(out):
-        if merged and i % per:
-            merged[-1] += s
-        else:
-            merged.append(s)
-    return merged
+            out.append(rest)
+    return out
 
 
 def main():

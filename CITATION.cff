@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "如果您在研究中使用梦华经纬的数据或代码，请引用本站。"
+title: 梦华经纬 · 《东京梦华录》数字人文平台
+authors:
+  - name: 梦华经纬项目组
+    affiliation: 经纬系列数字人文站
+type: software
+repository-code: "https://github.com/V-T-V/menghua-jingwei"
+abstract: >-
+  宋孟元老《东京梦华录》十卷数字人文平台：门谱（34）、河道（4，明载桥 32）、
+  街市（21）、岁时（43）四层织北宋东京城。语料 kanripo KR2k0111
+  （文淵閣四庫全書本）；坐标全量 src:derived（示意平面锚定 WGS84）；
+  数字全部出自脚本（docs/stats.json）。
+keywords:
+  - 东京梦华录
+  - 北宋东京
+  - 数字人文
+  - 城市史
+  - 岁时民俗
+version: 0.1.0
+date-released: "2026-11-23"
+license:  # 许可行留白（所有者待定）

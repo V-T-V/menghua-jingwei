@@ -216,8 +216,9 @@ def main():
         kml_p = os.path.join(exp, "梦华经纬-城图.kml")
         if os.path.exists(kml_p):
             kml = open(kml_p, encoding="utf-8").read()
-            ok(kml.count("<Placemark>") == 34 + 21, f"KML 点要素 {kml.count('<Placemark>')} ≠ 55")
+            ok(kml.count("<Point>") == 34 + 21, f"KML 点要素 {kml.count('<Point>')} ≠ 55")
             ok(kml.count("<LineString>") == 4, "KML 线要素 ≠ 4")
+            ok(kml.count("<Placemark>") == 59, f"KML 总要素 {kml.count('<Placemark>')} ≠ 59")
             ok("derived" in kml, "KML 缺 derived 注记")
         gj_p = os.path.join(exp, "梦华经纬-城图.geojson")
         if os.path.exists(gj_p):

@@ -59,7 +59,7 @@ def data_asserts():
             assert len(x["rows"] if "rows" in x else x["pairs"]) >= 4, f"{xf} 对照条目不足"
         kml = open(os.path.join(ROOT, "exports", "梦华经纬-城图.kml"),
                    encoding="utf-8").read()
-        assert kml.count("<Placemark>") == 55, "KML 点要素 ≠ 55"
+        assert kml.count("<Placemark>") == 59, "KML 总要素 ≠ 59（55 点 + 4 线）"
 
     print(f"块 88（{m['perVol']}）· 总 {stats['total_chars']:,} 字 · "
           f"夜市 {stats['words']['夜市']} 次 · 金明池 {stats['words']['金明池']} 次 · "

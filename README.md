@@ -24,7 +24,7 @@ python tools/parse_entries.py     # 解析 88 块（与抓取报告对账）
 python tools/stats.py             # 计量 → docs/stats.json（唯一数字源）
 python tools/build_data.py        # 构建 → site_data/sections/text（书证逐段验真）
 python tools/lint.py              # 确定性检查
-python run_tests.py               # 全套回归
+python run_tests.py               # 全套回归（v2）
 ```
 
 ## 功能
@@ -56,10 +56,11 @@ python run_tests.py               # 全套回归
 
 ## 测试与验证
 
-- `python run_tests.py`：lint（574+ 项）+ 数据断言 + SHA256SUMS 对账（P2 起）。
+- `python run_tests.py`：lint（598 项）+ 数据断言 + SHA256SUMS 对账（P2 起）。
 - 断言页（serve 后打开，title=PASS 即绿）：
   `tests/assert_data.html`（32 项）· `tests/assert_reader.html`（22 项，iframe 驱动真
-  index：深链/循读/岁时/检索）· `tests/assert_map.html`（22 项，分层开关/符号计数）。
+  index：深链/循读/岁时/检索）· `tests/assert_map.html`（22 项，分层开关/符号计数）·
+  `tests/assert_p2.html`（29 项，双桥数据/导出同口径/SW 键对齐）。
 - CI：`.github/workflows/ci.yml`（push/PR）；周六审计 `audit.yml`（10:50 CST 错峰，
   含真断网离线三验）。
 

@@ -3,7 +3,8 @@
    桥页签懒加载 data/xref_hy.js · data/xref_ly.js（P2 管线产物） */
 
 const MHSTATS = (() => {
-  const S = () => window.MH_STATS;
+  /* MH_STATS 为 data/stats.js 顶层 const——跨 script 可见，但不挂 window（勿 window.X 取） */
+  const S = () => MH_STATS;
 
   function open(tab = "layer") {
     MHAPP.setMode("stats");
@@ -41,7 +42,7 @@ const MHSTATS = (() => {
   function loadScript(src) {
     return new Promise((ok, bad) => {
       const s = document.createElement("script");
-      s.src = src + "?v=1";
+      s.src = src + "?v=2";
       s.onload = ok;
       s.onerror = () => bad(new Error(src + " 加载失败"));
       document.head.appendChild(s);

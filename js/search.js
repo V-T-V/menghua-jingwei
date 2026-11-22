@@ -29,7 +29,7 @@ const MHSEARCH = (() => {
       let pending = 11;
       for (let v = 0; v <= 10; v++) {
         const s = document.createElement("script");
-        s.src = `data/text/v${v}.js?v=1`;
+        s.src = `data/text/v${v}.js?v=2`;
         s.onload = s.onerror = () => { if (--pending === 0) { loaded = true; ok(); } };
         document.head.appendChild(s);
       }

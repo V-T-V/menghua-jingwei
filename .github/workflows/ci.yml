@@ -1,0 +1,48 @@
+# 梦华经纬 · push/PR 门禁（承姊妹站 ci.yml 结构）
+# 两层：① run_tests.py 纯 Python 层（lint + 数据断言/P2 + SHA256SUMS 对账，无需浏览器即全绿）
+#       ② 浏览器断言层——run_tests 的断言页是「提醒式」（serve 后人工打开），CI 里以
+#          runner 预装 Chrome 无头 dump-dom 代跑，逐页 title=PASS 即绿，缺一即红。
+# 依赖说明：本站测试栈（run_tests.py / tools/lint.py / build_sums.py）纯 stdlib，无需 pip。
+name: CI
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 回归 run_tests.py（lint + 数据断言 + 账目对账）
+        run: python run_tests.py
+      - name: 浏览器存在性检验
+        run: |
+          # runner 预装 Chrome，缺件即红，绝不兜底（教训 20：|| true 吞错）
+          test -x /usr/bin/google-chrome && /usr/bin/google-chrome --version
+      - name: 起本地服务
+        run: |
+          python -m http.server 9900 --bind 127.0.0.1 &
+          # 就绪探针：重试只治冷启动竞态，起不来照样红（非吞错）
+          curl -sf --retry 8 --retry-delay 2 --retry-connrefused http://127.0.0.1:9900/index.html -o /dev/null && echo server-up
+      - name: 浏览器断言页（无头 dump-dom，title=PASS 即绿）
+        run: |
+          # 断言页自跑完把 document.title 写成 PASS (n)/FAIL——dump-dom 取最终 DOM 判 title。
+          # assert_reader/assert_map 是 iframe 驱动真 index.html（深链/循读/分层/检索），
+          # --virtual-time-budget 令虚时在取数期间暂停、推进后统一序列化。
+          fail=0
+          for page in tests/assert_*.html; do
+            dom="$(/usr/bin/google-chrome --headless=new --disable-gpu --no-first-run \
+              --user-data-dir="$(mktemp -d)" --virtual-time-budget=30000 \
+              --dump-dom "http://127.0.0.1:9900/$page")"
+            t="$(printf '%s' "$dom" | grep -o '<title>[^<]*' | head -1)"
+            case "$t" in
+              "<title>PASS"*) echo "✓ $page ${t#<title>}";;
+              *) echo "✗ $page ${t:-（无 title——页面未跑完）}"; fail=1;;
+            esac
+          done
+          exit $fail
+      - name: SW 键对齐四验（offline_check：SW 在位 · 断网重载 · 数据层离线可得 · 严格键命中）
+        env:
+          MH_BROWSER: /usr/bin/google-chrome
+        run: python tools/offline_check.py
