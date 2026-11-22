@@ -153,10 +153,12 @@ def reap(proc, port):
         except OSError:
             pass
     if sys.platform == "win32":
+        # 只杀本站 CDP 端口的无头实例——并行会话的浏览器不误伤（本会话增补：
+        # LYGL 原版全杀 headless，多 agent 并行时会互相掐进程）
         subprocess.run(["powershell", "-NoProfile", "-Command",
                         "Get-CimInstance Win32_Process | "
-                        "Where-Object {$_.CommandLine -like '*headless*'} | "
-                        "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }"],
+                        "Where-Object {$_.CommandLine -like '*remote-debugging-port=%d*'} | "
+                        "ForEach-Object { Stop-Process -Id $_.ProcessId -Force }" % port],
                        capture_output=True, timeout=30)
     else:
         subprocess.run(["pkill", "-f", "remote-debugging-port=%d" % port],
