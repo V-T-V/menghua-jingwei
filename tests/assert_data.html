@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>梦华经纬 · 数据断言</title>
+<style>
+body{font-family:KaiTi,serif;background:#241f17;color:#e8e0c8;padding:24px;line-height:1.8}
+h2{font-weight:400;letter-spacing:4px;border-bottom:1px solid #a8874a;padding-bottom:6px}
+.pass{color:#8fae8d}.fail{color:#e08a7e;font-weight:bold}
+li{list-style:none;margin:4px 0}
+</style>
+</head>
+<body>
+<h2>数据断言 · 梦华经纬</h2>
+<ul id="out"></ul>
+<script src="../data/site_data.js?v=1"></script>
+<script src="../data/stats.js?v=1"></script>
+<script src="../data/sections.js?v=1"></script>
+<script>
+const out = document.getElementById("out");
+let n = 0, bad = 0;
+function assert(cond, label) {
+  n++;
+  const li = document.createElement("li");
+  li.textContent = (cond ? "✓ " : "✗ ") + label;
+  li.className = cond ? "pass" : "fail";
+  if (!cond) bad++;
+  out.appendChild(li);
+}
+const m = MHZ.meta;
+assert(m.gates === 34 && MHZ.gates.length === 34, `城门总数 ${MHZ.gates.length} = 34`);
+assert(MHZ.gates.filter(g => g.wall === "外城").length === 16, "外城门 16（南3·東4·西5·北4，卷一原文）");
+assert(MHZ.gates.filter(g => g.wall === "舊城").length === 12, "旧城门 12（四壁各三，卷一原文）");
+assert(MHZ.gates.filter(g => g.wall === "大内").length === 6, "大内宫门 6（宣德/掖/華/拱辰）");
+assert(!!MHZ.gates.find(g => g.name === "南薰門"), "南薰門在列（卷一「正南門曰南薰門」）");
+assert(!!MHZ.gates.find(g => g.name === "東北水門"), "東北水門在列（五丈河水門）");
+assert(MHZ.rivers.length === 4, `穿城河道 ${MHZ.rivers.length} = 4（蔡/汴/五丈/金水）`);
+assert(MHZ.rivers.every(r => r.pts.length >= 8), "四河皆 ≥8 折点（走向示意线）");
+const bridges = MHZ.rivers.reduce((a, r) => a + r.bridges.length, 0);
+assert(bridges === 32, `原文明载桥 ${bridges} = 32（11+13+5+3）`);
+assert(MHZ.rivers.find(r => r.name === "汴河").bridges.includes("州橋"), "汴河桥表含州橋");
+assert(MHZ.rivers.find(r => r.name === "蔡河").bridges.includes("龍津橋"), "蔡河桥表含龍津橋");
+assert(MHZ.places.length === 21, `街市地条目 ${MHZ.places.length} = 21`);
+assert(!!MHZ.places.find(p => p.name === "州橋夜市"), "州橋夜市在列（卷二）");
+assert(!!MHZ.places.find(p => p.name === "金明池"), "金明池在列（卷七）");
+assert(!!MHZ.places.find(p => p.name === "大相國寺"), "大相國寺在列（卷三）");
+assert(MHZ.places.every(p => p.src === "derived"), "全部街市坐标 src:derived");
+assert(MHZ.places.every(p => typeof p.att === "string" && p.att.length > 4), "全部街市有方位书证");
+assert(MHZ.gates.every(g => g.att.length > 3), "全部城门有城防谱书证");
+assert(MHZ.suishi.length === 43, `节序 ${MHZ.suishi.length} = 43`);
+assert(MHZ.suishi.every(s => s.month >= 1 && s.month <= 12), "节序月序皆合法");
+assert(!!MHZ.suishi.find(s => s.name === "元宵" && s.month === 1), "元宵在正月");
+assert(!!MHZ.suishi.find(s => s.name === "除夕" && s.month === 12), "除夕在十二月");
+assert(Object.keys(MH_SECTIONS).length === 88, `阅读块 ${Object.keys(MH_SECTIONS).length} = 88`);
+assert(MHZ.places.every(p => !!MH_SECTIONS[p.jie]), "每条街市挂接原文块");
+assert(m.totalChars === MH_STATS.total_chars, `前端总字数 ${m.totalChars} 与脚本产物一致`);
+assert(m.krEntities === 38, `缺字实体 ${m.krEntities} = 38（□ 代）`);
+const zq = MHZ.places.find(p => p.name === "州橋");
+assert(zq && zq.pos[0] === 4400 && zq.pos[1] === 2400, `州橋在御街汴河交点（${zq && zq.pos}）`);
+const jms = MHZ.places.find(p => p.name === "金明池");
+assert(jms && jms.pos[0] < 0, `金明池在顺天门外（x=${jms && jms.pos[0]} < 0）`);
+const nx = MHZ.gates.find(g => g.name === "南薰門");
+assert(nx && nx.pos[0] === 4400 && nx.pos[1] === 0, `南薰門在御街南端（${nx && nx.pos}）`);
+const zqm = MHZ.gates.find(g => g.name === "朱雀門");
+assert(zqm && zqm.pos[0] === 4400, `朱雀門在御街轴上（x=${zqm && zqm.pos[0]}）`);
+assert(MH_STATS.layer_chars.suishi > MH_STATS.layer_chars.street, "岁时篇幅 > 街市篇幅（结构特征）");
+assert(MH_STATS.words["夜市"] >= 3 && MH_STATS.words["金明池"] >= 5, "关键词频在量级");
+const title = bad === 0 ? `PASS (${n})` : `FAIL (${bad}/${n})`;
+document.title = title;
+const li = document.createElement("li");
+li.textContent = `—— ${title}`;
+li.className = bad === 0 ? "pass" : "fail";
+out.appendChild(li);
+</script>
+</body>
+</html>

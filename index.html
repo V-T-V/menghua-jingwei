@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>梦华经纬 · 东京梦华录十卷全城</title>
+<meta name="description" content="宋孟元老《东京梦华录》十卷数字人文平台——门谱、河道、街市、岁时四层织北宋东京城，循读原文、全文检索、岁时时间轴">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="vendor/leaflet.css?v=1">
+<link rel="stylesheet" href="css/main.css?v=1">
+</head>
+<body>
+
+<div id="map"></div>
+<div class="paper-wash"></div>
+
+<!-- 顶栏模式 -->
+<nav id="modes">
+  <button class="mode active" data-mode="map">舆图</button><span>·</span>
+  <button class="mode" data-mode="read">循读</button><span>·</span>
+  <button class="mode" data-mode="directory">名录</button><span>·</span>
+  <button class="mode" data-mode="suishi">岁时</button><span>·</span>
+  <button class="mode" data-mode="stats">计量</button><span>·</span>
+  <button class="mode" data-mode="about">关于</button>
+</nav>
+<div id="searchwrap">
+  <input id="search" type="text" placeholder="检全书十卷——门名·街市·节序，如 州橋 / 金明池 / 元宵" autocomplete="off">
+  <div id="sresults"></div>
+</div>
+<aside id="rail">
+  <div class="rt" id="railtitle">梦华纲目<small id="railsub">门·河·街市·节序</small></div>
+  <div id="raillist"></div>
+</aside>
+
+<!-- 分层开关 -->
+<div id="layerbox">
+  <div class="lt">图层</div>
+  <div class="lrow on" data-layer="wall"><span class="sw c-wall"></span>城垣御街</div>
+  <div class="lrow on" data-layer="gate"><span class="sw" style="background:#5c5138"></span>城门谱</div>
+  <div class="lrow on" data-layer="river"><span class="sw" style="background:#3d6a7d"></span>河道桥池</div>
+  <div class="lrow on" data-layer="place"><span class="sw" style="background:#8e2b22"></span>街市点</div>
+</div>
+
+<!-- 右幅面板 -->
+<section id="panel">
+  <button id="pclose" title="收起">✕</button>
+  <div class="vtitle"><div class="vname" id="vname"></div><div class="vseal" id="vseal">梦华</div></div>
+  <div id="pmeta"></div>
+  <div id="pbody"></div>
+</section>
+
+<!-- 循读条 -->
+<div id="readerbar" class="hidden">
+  <button id="rprev" title="上一节">◀</button>
+  <div id="rprog">按卷循读</div>
+  <button id="rnext" title="下一节">▶</button>
+  <select id="rjvol" title="选卷"></select>
+  <button id="rtts" title="自当前节朗读（听书）">▷ 朗读</button>
+</div>
+
+<footer id="fbar">
+  <button class="ftool" id="fitlink" title="全城概览（外城方圓四十餘里）">▦ 全城</button>
+  <button class="ftool" id="wanderlink" title="随机择一街市巡游">⚑ 漫游</button>
+  <button class="ftool" id="bmlink" title="书签（LocalStorage，浏览器本地保存）">✿ 书签</button>
+  <button class="ftool" id="nightlink" title="夜读模式（墨色护眼）">☾ 夜读</button>
+  <span class="sep"></span><span id="modelabel">舆图</span><span class="sep"></span>
+  <span id="modenote">汴京城图 · 门/河/街市分层</span>
+  <span class="sep"></span><span class="fb" id="bookstat"></span>
+  <div class="right"><span id="swstate" title="Service Worker 就绪后：全书离线可用" style="display:none"></span><span>文本 · kanripo 四库本</span><span>城图 · 自绘示意</span></div>
+</footer>
+
+<!-- 序幕 -->
+<div id="boot">
+  <div class="bt">
+    <div class="seal-row"><span class="bseal">夢</span><span class="bseal b2">華</span></div>
+    <h1>梦华经纬</h1>
+    <p class="sub">宋 · 孟元老《东京梦华录》十卷 · 汴京一门一河一市</p>
+    <div class="lanterns"><i></i><i></i><i></i><i></i><i></i></div>
+    <p class="quote">「僕數十年爛賞疊遊，莫知厭足……豈非華胥之夢覺哉。」</p>
+    <button class="go">入 城</button>
+    <p class="hint">循读原文 · 门河街市 · 岁时记 · 全文检索</p>
+  </div>
+</div>
+
+<script src="vendor/leaflet.js"></script>
+<script src="data/site_data.js?v=1"></script>
+<script src="data/stats.js?v=1"></script>
+<script src="js/config.js?v=1"></script>
+<script src="js/map.js?v=1"></script>
+<script src="js/rail.js?v=1"></script>
+<script src="js/reader.js?v=1"></script>
+<script src="js/search.js?v=1"></script>
+<script src="js/suishi.js?v=1"></script>
+<script src="js/stats.js?v=1"></script>
+<script src="js/bookmarks.js?v=1"></script>
+<script src="js/export.js?v=1"></script>
+<script src="js/app.js?v=1"></script>
+</body>
+</html>

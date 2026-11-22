@@ -1,0 +1,15 @@
+{
+  "name": "梦华经纬 · 东京梦华录",
+  "short_name": "梦华经纬",
+  "description": "宋孟元老《东京梦华录》十卷数字人文平台——门谱、河道、街市、岁时四层织北宋东京城",
+  "lang": "zh-CN",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ece8d8",
+  "theme_color": "#7e2b1f",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

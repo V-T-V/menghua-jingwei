@@ -1,0 +1,96 @@
+{
+ "source": "https://raw.githubusercontent.com/kanripo/KR2k0111/master",
+ "source_note": "kanripo KR2k0111（文淵閣四庫全書本 WYG，mandoku org 格式）via GitHub raw；GB 无转换（源即 UTF-8）；维基文库本未另行核校，版本性质见 README",
+ "vols": [
+  {
+   "num": "000",
+   "title": "自序",
+   "chars": 724,
+   "sects": 2,
+   "krEntities": 0,
+   "cached": false
+  },
+  {
+   "num": "001",
+   "title": "卷一",
+   "chars": 2465,
+   "sects": 6,
+   "krEntities": 1,
+   "cached": false
+  },
+  {
+   "num": "002",
+   "title": "卷二",
+   "chars": 3114,
+   "sects": 8,
+   "krEntities": 11,
+   "cached": false
+  },
+  {
+   "num": "003",
+   "title": "卷三",
+   "chars": 2830,
+   "sects": 13,
+   "krEntities": 5,
+   "cached": false
+  },
+  {
+   "num": "004",
+   "title": "卷四",
+   "chars": 1795,
+   "sects": 12,
+   "krEntities": 2,
+   "cached": false
+  },
+  {
+   "num": "005",
+   "title": "卷五",
+   "chars": 2021,
+   "sects": 4,
+   "krEntities": 7,
+   "cached": false
+  },
+  {
+   "num": "006",
+   "title": "卷六",
+   "chars": 3297,
+   "sects": 8,
+   "krEntities": 3,
+   "cached": false
+  },
+  {
+   "num": "007",
+   "title": "卷七",
+   "chars": 4201,
+   "sects": 9,
+   "krEntities": 6,
+   "cached": false
+  },
+  {
+   "num": "008",
+   "title": "卷八",
+   "chars": 2081,
+   "sects": 10,
+   "krEntities": 0,
+   "cached": false
+  },
+  {
+   "num": "009",
+   "title": "卷九",
+   "chars": 2082,
+   "sects": 4,
+   "krEntities": 2,
+   "cached": false
+  },
+  {
+   "num": "010",
+   "title": "卷十",
+   "chars": 3216,
+   "sects": 12,
+   "krEntities": 1,
+   "cached": false
+  }
+ ],
+ "total_chars": 27826,
+ "fetched_at": "2026-11-23 07:00:02"
+}

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>梦华经纬 · 舆图断言</title>
+<style>
+body{font-family:KaiTi,serif;background:#241f17;color:#e8e0c8;padding:24px;line-height:1.8}
+h2{font-weight:400;letter-spacing:4px;border-bottom:1px solid #a8874a;padding-bottom:6px}
+.pass{color:#8fae8d}.fail{color:#e08a7e;font-weight:bold}
+li{list-style:none;margin:4px 0}
+#stage{position:fixed;left:-4000px;top:0;width:960px;height:720px}
+</style>
+</head>
+<body>
+<h2>舆图断言 · 梦华经纬（城图分层与开关 DOM 级）</h2>
+<ul id="out"></ul>
+<div id="stage"><iframe id="fr" width="960" height="720"></iframe></div>
+<script>
+const out = document.getElementById("out");
+let n = 0, bad = 0;
+function assert(cond, label) {
+  n++;
+  const li = document.createElement("li");
+  li.textContent = (cond ? "✓ " : "✗ ") + label;
+  li.className = cond ? "pass" : "fail";
+  if (!cond) bad++;
+  out.appendChild(li);
+}
+const fr = document.getElementById("fr");
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function run() {
+  const bust = "?fresh=" + Date.now();
+  await new Promise(r => { fr.onload = r; fr.src = "../index.html" + bust + "#m=map"; });
+  await sleep(2800);
+  let doc;
+  try { doc = fr.contentDocument; } catch (e) { doc = null; }
+  assert(!!doc, "iframe 加载 index.html");
+  if (!doc) return finish();
+  const view = doc.defaultView;
+  assert(!!view.MHMAP && !!view.MHMAP.map, "MHMAP 初始化（map 在场）");
+  assert(view.MHMAP.map instanceof view.L.Map, "Leaflet 地图实例类型正确");
+  const gates = doc.querySelectorAll("#map .gatesym");
+  assert(gates.length === 34, `城门符号 ${gates.length} = 34`);
+  const wallGates = doc.querySelectorAll("#map .gatesym.w外城");
+  assert(wallGates.length === 16, "外城门符号 16");
+  const palaceGates = doc.querySelectorAll("#map .gatesym.w大内");
+  assert(palaceGates.length === 6, "大内宫门符号 6");
+  const riverPaths = doc.querySelectorAll("#map .riverline");
+  assert(riverPaths.length === 4, `河道线 ${riverPaths.length} = 4（线层）`);
+  const placeDots = doc.querySelectorAll("#map .jiedot");
+  assert(placeDots.length === 21, `街市点 ${placeDots.length} = 21`);
+  const pools = doc.querySelectorAll("#map .poolface");
+  assert(pools.length === 1, "金明池水面在场");
+  /* 分层开关：关河道 → 线层移除 */
+  const layerRow = [...doc.querySelectorAll("#layerbox .lrow")]
+    .find(r => r.dataset.layer === "river");
+  assert(!!layerRow && layerRow.classList.contains("on"), "河道开关初始 on");
+  layerRow.dispatchEvent(new Event("click"));
+  await sleep(500);
+  assert(doc.querySelectorAll("#map .riverline").length === 0, "关河道开关 → 线层移除");
+  assert(view.MHMAP.visible.river === false, "MHMAP.visible.river=false");
+  layerRow.dispatchEvent(new Event("click"));
+  await sleep(500);
+  assert(doc.querySelectorAll("#map .riverline").length === 4, "再开河道开关 → 线层恢复");
+  /* 分层开关：关街市 → 点层移除 */
+  const placeRow = [...doc.querySelectorAll("#layerbox .lrow")]
+    .find(r => r.dataset.layer === "place");
+  placeRow.dispatchEvent(new Event("click"));
+  await sleep(500);
+  assert(doc.querySelectorAll("#map .jiedot").length === 0, "关街市开关 → 点层移除");
+  placeRow.dispatchEvent(new Event("click"));
+  await sleep(500);
+  assert(doc.querySelectorAll("#map .jiedot").length === 21, "再开街市开关 → 点层恢复");
+  /* 御街轴线（DOM path 之一带 dash 动画样式类不验，验存在 yujie 折线数不小于 1） */
+  const axisLabel = doc.querySelector("#map .axislab");
+  assert(axisLabel && axisLabel.textContent.includes("御"), "御街轴线标签在场");
+  /* 选中态：点击漫游（随机街市）后面板开 */
+  const wander = doc.getElementById("wanderlink");
+  wander.click();
+  await sleep(1200);
+  assert(doc.getElementById("panel").classList.contains("open"), "漫游 → 详情面板 open");
+  assert(doc.querySelector("#map .focusring"), "选中街市有 focus 环");
+  const meta = doc.getElementById("pmeta").textContent;
+  assert(meta.includes("src:derived"), "详情 meta 注明 src:derived");
+  /* 名录 */
+  fr.src = "../index.html" + bust + "#m=directory";
+  await sleep(2000);
+  doc = fr.contentDocument;
+  const rows = doc.querySelectorAll("#pbody .drow");
+  assert(rows.length >= 21, `名录默认街市表 ${rows.length} 行 ≥ 21`);
+  const tabs = [...doc.querySelectorAll("#pbody .dtab[data-k]")];
+  assert(tabs.length === 4, "名录四页签（街市/城门/河道/节序）");
+  tabs.find(t => t.dataset.k === "gates").click();
+  await sleep(400);
+  assert(doc.querySelectorAll("#pbody .drow[data-gate]").length === 34, "城门页签 34 行");
+  finish();
+}
+
+function finish() {
+  const title = bad === 0 ? `PASS (${n})` : `FAIL (${bad}/${n})`;
+  document.title = title;
+  const li = document.createElement("li");
+  li.textContent = `—— ${title}`;
+  li.className = bad === 0 ? "pass" : "fail";
+  out.appendChild(li);
+}
+
+run();
+</script>
+</body>
+</html>
